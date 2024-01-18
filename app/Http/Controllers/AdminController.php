@@ -22,8 +22,20 @@ class AdminController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
+
+
     {
+
+
+
+
+
+
+
+
+
         $authorizations = $request->session()->get('ADMIN_ENVATO_AUTHORIZED');
+
         if ($authorizations == '') {
             return redirect('/admin/authorizations');
         }
@@ -45,6 +57,10 @@ class AdminController extends Controller
     {
         $email = $request->post('email');
         $password = $request->post('password');
+
+
+
+        // dd($result->authorizations_status);
 
         // $result=Admin::where(['email'=>$email, 'password'=>$password])->get();
         $result = Admin::where(['email' => $email])->first();
@@ -136,18 +152,24 @@ class AdminController extends Controller
         $client_id      = 'laravel-applications-rqpsulk8';
 
         $redirectUrl = 'https://api.envato.com/authorization?response_type=code&client_id=' . $client_id . '&redirect_uri=' . $currentUrl . '';
+
         return view('admin.authorizations', ['redirectUrl' => $redirectUrl]);
     }
 
     public function envato_license_authorizations(Request $request)
     {
+
+
         $userId  = $request->session()->get('ADMIN_ID');
         $updateModel                          = Admin::find($userId);
 
+
+        dd($request->all());
         if (isset($_REQUEST['code'])) {
 
             $this->client_id        = 'eg_notifications_license-bllcb4o2';
             $this->client_secret    = 'OB4bxqgxw90M0eKsG52v7n7F4LtUtnYM';
+
 
             $redirectCode       = $_REQUEST['code'];
             $getAccessToken      = $this->getAccessToken($redirectCode);
