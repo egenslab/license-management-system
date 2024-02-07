@@ -1,8 +1,8 @@
 .header, .header-brand{
     height: 54px !important;
     border-bottom: 1px solid #f1f1f1;
-    left: 53px !important;   
-    z-index: 790 !important; 
+    left: 53px !important;
+    z-index: 790 !important;
     box-shadow: none !important;
 }
 
@@ -13,7 +13,7 @@
 .aside{
     box-shadow:  0 0 4px 0 rgb(0 0 0 / 11%) !important;
     left: 53px !important;
-    
+
 }
 .page{
     margin-left: 53px !important;
@@ -21,7 +21,7 @@
 
 .header-fixed.toolbar-fixed .toolbar{
     top: 54px !important;
-    
+
 }
 
 .toolbar-fixed .toolbar{
@@ -35,12 +35,12 @@
 }
 
 .sidebar-icon{
-    background-color: #091f2e; 
-    position: fixed; 
-    left: 0; 
+    background-color: #091f2e;
+    position: fixed;
+    left: 0;
     top: 0;
     width: 53px;
-    height: calc(100vh); 
+    height: calc(100vh);
     z-index: 1000;
 }
 
@@ -63,10 +63,10 @@
     border-bottom-color:#e7e7e7 ;
 }
 
-.invalid-feedback{    
+.invalid-feedback{
     display: block;
 }
-    
+
 .form-control{
     font-weight: 400 !important;
 }
@@ -86,3 +86,14 @@
 .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
     max-width: inherit;
 }
+
+.main-container {
+    padding: 40px 15px;
+    text-align: center;
+  }
+  #show-result{
+      margin-top: 20px;
+  }
+  td{
+      text-align: left;
+  }

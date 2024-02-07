@@ -36,6 +36,8 @@
                         <div class="menu-item"><a class="menu-link" href="{{url("/admin/dashboard")}}"><span class="menu-title">Dashboard </span></a></div>
                         <div class="menu-item"><a class="menu-link" href="{{url("/admin/license")}}"><span class="menu-title">License </span></a></div>
                         <div class="menu-item"><a class="menu-link" href="{{url("/admin/users")}}"><span class="menu-title">Users</span></a></div>
+                        <div class="menu-item"><a class="menu-link" href="{{url("/admin/verify")}}"><span class="menu-title">Purchanse Verify</span></a></div>
+                        <div class="menu-item"><a class="menu-link" href="{{route("purchase.code.list")}}"><span class="menu-title">Purchanse Code List </span></a></div>
                      </div>
                      <!--end::Menu-->
                   </div>
