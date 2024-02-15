@@ -267,6 +267,17 @@ class LicenseController extends Controller
     public function envatoPurchase(Request $request)
     {
 
+        $validator = Validator::make($request->all(), [
+            'purchase_code' => 'required',
+            'marketplace_name' => 'required',
+            'script_type' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+
+
         $response = $this->envatoApi::verifyPurchase($request->purchase_code , $request->marketplace_name);
         if ($response == false) {
             return Response()->json(['status' => false, 'result' => 'Sorry, This is not a valid purchase code or this user have not purchased any of your items.']);
@@ -295,11 +306,6 @@ class LicenseController extends Controller
 
     }
 
-
-
-
-
-
     public function purchaseCodeDelete($purchase_code, $marketplace_name){
 
         if(strtolower($marketplace_name) !== 'envato'){
@@ -308,13 +314,27 @@ class LicenseController extends Controller
     }
 
 
+    public function updateLicense(Request $request){
 
 
+        $validator = Validator::make($request->all(), [
+            'purchase_code' => 'required',
+        ]);
 
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'errors' => $validator->errors()], 401);
+        }
 
+       if(License::where(['license_key'=> $request->purchase_code, 'website_url'=>  $request->getHost()])->first()){
+            if (License::where(['license_key'=> $request->purchase_code, 'website_url'=>  $request->getHost()])->first()) {
+                return Response()->json(['status' => true, 'result' => "Update Successfully"]);
+            }else{
+                return Response()->json(['status' => false, 'result' => "Already user another domain"]);
+            }
+       }
+        return Response()->json(['status' => false, 'result' => "Wrong Purchase Code"]);
 
-
-
+    }
 
 
 

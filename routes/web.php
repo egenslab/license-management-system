@@ -48,7 +48,6 @@ Route::group(['middleware'=>'admin_auth'],function(){
 
 
     Route::get('admin/purchase-code-list',[AdminController::class, 'purchaseCodeList'])->name('purchase.code.list');
-
     Route::get('admin/generate-purchase-code',[AdminController::class, 'purchaseCodeGenerate'])->name('generate.purchase.code');
     Route::post('admin/store-purchase-code',[AdminController::class, 'purchaseCodeStore'])->name('store.purchase.code');
     Route::get('admin/purchase-code/{id}',[AdminController::class, 'purchaseCodeDelete'])->name('delete.purchase.code');

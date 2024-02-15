@@ -24,4 +24,5 @@ Route::post('install',[LicenseController::class, 'installPlugin']);
 Route::post('setup_license',[LicenseController::class, 'setupLicense']);
 Route::post('removed_license_key',[LicenseController::class, 'removedLicenseKey']);
 Route::post('admin/verify-envato-purchase',[LicenseController::class, 'envatoPurchase']);
+Route::post('admin/license-update',[LicenseController::class, 'updateLicense']);
 
