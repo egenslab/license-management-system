@@ -284,7 +284,7 @@ class LicenseController extends Controller
         } else {
             try {
                 if (License::where('license_key', $request->purchase_code)->first()) {
-                    return Response()->json(['status' => true, 'result' => "Already use purchase code"]);
+                    return Response()->json(['status' => false, 'result' => "Already use purchase code"]);
                 }
                 $license = new License;
                 $license->name = $response->buyer;
