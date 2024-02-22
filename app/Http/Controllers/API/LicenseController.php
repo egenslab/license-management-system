@@ -22,7 +22,7 @@ class LicenseController extends Controller
     protected $client_secret;
     protected $envatoApi;
 
-    public function __construct( EnvatoApi2 $envatoApi)
+    public function __construct(EnvatoApi2 $envatoApi)
     {
         $this->userId = 1;
         $this->client_id = 'eg_notifications_license-bllcb4o2';
@@ -278,18 +278,18 @@ class LicenseController extends Controller
         }
 
 
-        $response = $this->envatoApi::verifyPurchase($request->purchase_code , $request->marketplace_name);
+        $response = $this->envatoApi::verifyPurchase($request->purchase_code, $request->marketplace_name);
         if ($response == false) {
             return Response()->json(['status' => false, 'result' => 'Sorry, This is not a valid purchase code or this user have not purchased any of your items.']);
         } else {
             try {
-                if ($licenseExit =License::where('license_key', $request->purchase_code)->first()) {
-                    return Response()->json(['status' => false, 'result' => "Already used the purchase code for ".$licenseExit->website_url. " domain. if you want to use another domain. please remove the purchase code from the use domain."]);
+                if ($licenseExit = License::where('license_key', $request->purchase_code)->first()) {
+                    return Response()->json(['status' => false, 'result' => "Already used the purchase code for " . $licenseExit->website_url . " domain. if you want to use another domain. please remove the purchase code from the use domain."]);
                 }
                 $license = new License;
                 $license->name = $response->buyer;
                 $license->email = $request->email;
-                $license->license_key = isset($request->purchase_code)? $request->purchase_code :  $response->purchase_code;
+                $license->license_key = isset($request->purchase_code) ? $request->purchase_code :  $response->purchase_code;
                 $license->website_url = $request->host_url;
                 $license->ip_details = json_encode(['query' => $request->ip()]);
                 $license->marketplace_name = $request->marketplace_name;
@@ -297,24 +297,25 @@ class LicenseController extends Controller
                 $license->status = 1;
                 $license->envato_response = json_encode($response);
                 $license->save();
-                $this->purchaseCodeDelete($request->purchase_code, $request->marketplace_name );
+                $this->purchaseCodeDelete($request->purchase_code, $request->marketplace_name);
                 return Response()->json(['status' => true, 'result' => "Verify purchased code sucessfully"]);
             } catch (\Throwable $th) {
                 return Response()->json(['status' => false, 'result' => $th->getMessage()]);
             }
         }
-
     }
 
-    public function purchaseCodeDelete($purchase_code, $marketplace_name){
+    public function purchaseCodeDelete($purchase_code, $marketplace_name)
+    {
 
-        if(strtolower($marketplace_name) !== 'envato'){
+        if (strtolower($marketplace_name) !== 'envato') {
             PurchaseCode::where("purchase_code", $purchase_code)->first()->delete();
         }
     }
 
 
-    public function updateLicense(Request $request){
+    public function updateLicense(Request $request)
+    {
 
 
         $validator = Validator::make($request->all(), [
@@ -325,18 +326,40 @@ class LicenseController extends Controller
             return response()->json(['status' => false, 'errors' => $validator->errors()], 401);
         }
 
-       if(License::where(['license_key'=> $request->purchase_code, 'website_url'=>  $request->host_url])->first()){
-            if (License::where(['license_key'=> $request->purchase_code, 'website_url'=>  $request->host_url])->first()) {
+        if ($licenseExit= License::where(['license_key' => $request->purchase_code, 'website_url' =>  $request->host_url])->first()) {
+            if ($licenseExit=License::where(['license_key' => $request->purchase_code, 'website_url' =>  $request->host_url])->first()) {
                 return Response()->json(['status' => true, 'result' => "Update Successfully",  'content' => '']);
-            }else{
-                return Response()->json(['status' => false, 'result' => "Already user another domain"]);
+            } else {
+                return Response()->json(['status' => false, 'result' => "Already use another domain". $licenseExit->website_url]);
             }
-       }
+        }
         return Response()->json(['status' => false, 'result' => "Wrong Purchase Code"]);
-
     }
 
 
+    public function removeLicense(Request $request)
+    {
 
 
+        $validator = Validator::make($request->all(), [
+            'purchase_code' => 'required',
+        ]);
+
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'errors' => $validator->errors()], 401);
+        }
+
+        if ($licenseExit=License::where(['license_key' => $request->purchase_code, 'website_url' =>  $request->host_url])->first()) {
+            if ($licenseExit=License::where(['license_key' => $request->purchase_code, 'website_url' =>  $request->host_url])->first()) {
+                 if($licenseExit){
+                    $licenseExit->delete();
+                    return Response()->json(['status' => true, 'result' => "Puchase Code Remove Successfully"]);
+                 }
+            } else {
+                return Response()->json(['status' => false, 'result' => "Already use another domain".$licenseExit->website_url]);
+            }
+        }
+        return Response()->json(['status' => false, 'result' => "Wrong Purchase Code"]);
+    }
 }
