@@ -283,8 +283,8 @@ class LicenseController extends Controller
             return Response()->json(['status' => false, 'result' => 'Sorry, This is not a valid purchase code or this user have not purchased any of your items.']);
         } else {
             try {
-                if (License::where('license_key', $request->purchase_code)->first()) {
-                    return Response()->json(['status' => false, 'result' => "Already use purchase code"]);
+                if ($licenseExit =License::where('license_key', $request->purchase_code)->first()) {
+                    return Response()->json(['status' => false, 'result' => "Already used the purchase code for ".$licenseExit->website_url. " domain. if you want to use another domain. please remove the purchase code from the use domain."]);
                 }
                 $license = new License;
                 $license->name = $response->buyer;
