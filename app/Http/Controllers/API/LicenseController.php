@@ -290,7 +290,7 @@ class LicenseController extends Controller
                 $license->name = $response->buyer;
                 $license->email = $request->email;
                 $license->license_key = isset($request->purchase_code)? $request->purchase_code :  $response->purchase_code;
-                $license->website_url = $request->getHost();
+                $license->website_url = $request->host_url;
                 $license->ip_details = json_encode(['query' => $request->ip()]);
                 $license->marketplace_name = $request->marketplace_name;
                 $license->script_type = $request->script_type;
