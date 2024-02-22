@@ -71,10 +71,7 @@ class EnvatoApi2
 
            return self::marketplacePurchaseCode($purchase_code);
         }
-        
 
-
-        return 0;
     }
 
 
