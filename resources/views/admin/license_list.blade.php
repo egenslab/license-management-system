@@ -184,7 +184,7 @@
                                         </td>
 
                                         <td>
-                                            <a href="{{  $liceseItem->website_url }}"  target="_blank" class="text-gray-600 text-hover-primary mb-1"
+                                            <a href="{{ $liceseItem->website_url }}"  target="_blank" class="text-gray-600 text-hover-primary mb-1"
                                                 style="color:#3f4254; font-weight: 500;">{{ $liceseItem->website_url }}</a>
                                         </td>
 

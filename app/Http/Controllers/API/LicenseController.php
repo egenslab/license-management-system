@@ -325,8 +325,8 @@ class LicenseController extends Controller
             return response()->json(['status' => false, 'errors' => $validator->errors()], 401);
         }
 
-       if(License::where(['license_key'=> $request->purchase_code, 'website_url'=>  $request->getHost()])->first()){
-            if (License::where(['license_key'=> $request->purchase_code, 'website_url'=>  $request->getHost()])->first()) {
+       if(License::where(['license_key'=> $request->purchase_code, 'website_url'=>  $request->host_url])->first()){
+            if (License::where(['license_key'=> $request->purchase_code, 'website_url'=>  $request->host_url])->first()) {
                 return Response()->json(['status' => true, 'result' => "Update Successfully"]);
             }else{
                 return Response()->json(['status' => false, 'result' => "Already user another domain"]);
