@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Admin;
-use App\Classes\EnvatoApi2;
 use App\Models\License;
+use App\Models\Product;
+use App\Classes\EnvatoApi2;
 use App\Models\PurchaseCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -344,12 +345,13 @@ class AdminController extends Controller
 
     public function purchaseCodeList(){
        $purchaseCodes= PurchaseCode::all();
+
         return view('admin.purchase-code-list', compact('purchaseCodes'));
     }
 
    public function purchaseCodeGenerate(){
-
-     return view('admin.generate-code');
+    $products= Product::all();
+     return view('admin.generate-code', compact('products'));
    }
 
    public function purchaseCodeStore(Request $request){
@@ -357,6 +359,7 @@ class AdminController extends Controller
     $validator = Validator::make($request->all(), [
         'purchase_code' => 'required',
         'marketplace_name' => 'required',
+        'product_name' => 'required',
     ]);
 
     if ($validator->fails()) {
@@ -364,7 +367,8 @@ class AdminController extends Controller
     }
        PurchaseCode::create([
            'purchase_code' => $request->purchase_code,
-           'marketplace_name' => $request->marketplace_name
+           'marketplace_name' => $request->marketplace_name,
+           'product_name' => $request->product_name
        ]);
 
        toastr()->success('Data has been saved successfully!');

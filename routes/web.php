@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DoctypeController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\ProductController;
 use App\Models\doctype;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
@@ -51,6 +52,8 @@ Route::group(['middleware'=>'admin_auth'],function(){
     Route::get('admin/generate-purchase-code',[AdminController::class, 'purchaseCodeGenerate'])->name('generate.purchase.code');
     Route::post('admin/store-purchase-code',[AdminController::class, 'purchaseCodeStore'])->name('store.purchase.code');
     Route::get('admin/purchase-code/{id}',[AdminController::class, 'purchaseCodeDelete'])->name('delete.purchase.code');
+
+    Route::resource('product',ProductController::class);
 
 
 });
