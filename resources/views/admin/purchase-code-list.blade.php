@@ -20,7 +20,9 @@
                             <!--begin::Table row-->
                             <tr style="color:#3f4254" class="text-start fw-bolder fs-7 text-uppercase gs-0">
                                 <th class="min-w-300px">Purchase Code</th>
+                                <th class="min-w-300px">Product Name</th>
                                 <th class="min-w-300px">MarketPlace Name</th>
+                                <th class="min-w-300px">Used</th>
                                 <th class="text-end min-w-70px">Actions</th>
                             </tr>
                             <!--end::Table row-->
@@ -36,7 +38,15 @@
                                     </td>
                                     <td>
                                         <a href="#" class="text-gray-600 text-hover-primary mb-1"
+                                            style="color:#3f4254; font-weight: 500;">{{ $purchaseCode->product_name }}</a>
+                                    </td>
+                                    <td>
+                                        <a href="#" class="text-gray-600 text-hover-primary mb-1"
                                             style="color:#3f4254; font-weight: 500;">{{ $purchaseCode->marketplace_name }}</a>
+                                    </td>
+                                    <td>
+                                        <a href="#" class="text-gray-600 text-hover-primary mb-1"
+                                            style="color:#3f4254; font-weight: 500;">{{ $purchaseCode->used==1 ? 'yes' : 'No' }}</a>
                                     </td>
 
                                     <td class="text-end">
