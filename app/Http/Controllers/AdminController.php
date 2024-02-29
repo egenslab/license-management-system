@@ -29,7 +29,7 @@ class AdminController extends Controller
     public function __construct(EnvatoApi2 $envatoApi)
     {
 
-        $this->envatoApi= $envatoApi;
+        $this->envatoApi = $envatoApi;
     }
 
 
@@ -116,9 +116,7 @@ class AdminController extends Controller
             return redirect('/admin/  ');
         }
 
-        $license = DB::table('licenses')
-            ->where('license_key', '<>', '', 'and')
-            ->get();
+        $license =  License::latest()->get();
         return view('admin.license_list', ['license' => $license]);
     }
 
@@ -158,12 +156,11 @@ class AdminController extends Controller
 
 
 
-    public function licenseDelete($id){
+    public function licenseDelete($id)
+    {
         License::where('id', $id)->delete();
         toastr()->success('Data has been delete successfully!');
         return redirect()->back();
-
-
     }
 
     public function authorizations(Request $request)
@@ -265,122 +262,122 @@ class AdminController extends Controller
 
 
 
-    public function verify(){
+    public function verify()
+    {
 
-         return view('admin.verify');
+        return view('admin.verify');
     }
 
 
-    public function envatoPurchase(Request $request){
+    // public function envatoPurchase(Request $request)
+    // {
 
-        $purchase_code= $request->purchase_code;
-        $result_type= $request->result_type;
-        $o = $this->envatoApi::verifyPurchase($purchase_code );
+    //     $purchase_code = $request->purchase_code;
+    //     $result_type = $request->result_type;
+    //     $o = $this->envatoApi::verifyPurchase($purchase_code);
 
-    if ( is_object($o) ) {
-        $output  = '<div class="panel panel-default">';
-        $output .= '<div class="panel-heading">Product Name</div>';
-        $output .= '<div class="panel-body">';
-        $output .= '<strong>'. $o->item->name .'</strong>';
-        $output .= '</div></div>';
-        $output .= '<div class="panel panel-success">';
-        $output .= '<div class="panel-heading">Item ID</div>';
-        $output .= '<div class="panel-body">';
-        $output .= '<strong>'. $o->item->id .'</strong>';
-        $output .= '</div></div>';
-        $output .= '<div class="panel panel-default">';
-        $output .= '<div class="panel-heading">Purchase Date</div>';
-        $output .= '<div class="panel-body">';
-        $output .= '<strong>'. date( "d F Y", strtotime( $o->sold_at ) ) .'</strong>';
-        $output .= '</div></div>';
-        $output .= '<div class="panel panel-success">';
-        $output .= '<div class="panel-heading">Buyer Name</div>';
-        $output .= '<div class="panel-body">';
-        $output .= '<strong>'. $o->buyer .'</strong>';
-        $output .= '</div></div>';
-        $output .= '<div class="panel panel-default">';
-        $output .= '<div class="panel-heading">License Type</div>';
-        $output .= '<div class="panel-body">';
-        $output .= '<strong>'. $o->license .'</strong>';
-        $output .= '</div></div>';
-        $output .= '<div class="panel panel-success">';
-        $output .= '<div class="panel-heading">Supported Until</div>';
-        $output .= '<div class="panel-body">';
-        $output .= '<strong>'. date( "d F Y", strtotime( $o->supported_until ) ) .'</strong>';
-        $output .= '</div></div>';
+    //     if (is_object($o)) {
+    //         $output  = '<div class="panel panel-default">';
+    //         $output .= '<div class="panel-heading">Product Name</div>';
+    //         $output .= '<div class="panel-body">';
+    //         $output .= '<strong>' . $o->item->name . '</strong>';
+    //         $output .= '</div></div>';
+    //         $output .= '<div class="panel panel-success">';
+    //         $output .= '<div class="panel-heading">Item ID</div>';
+    //         $output .= '<div class="panel-body">';
+    //         $output .= '<strong>' . $o->item->id . '</strong>';
+    //         $output .= '</div></div>';
+    //         $output .= '<div class="panel panel-default">';
+    //         $output .= '<div class="panel-heading">Purchase Date</div>';
+    //         $output .= '<div class="panel-body">';
+    //         $output .= '<strong>' . date("d F Y", strtotime($o->sold_at)) . '</strong>';
+    //         $output .= '</div></div>';
+    //         $output .= '<div class="panel panel-success">';
+    //         $output .= '<div class="panel-heading">Buyer Name</div>';
+    //         $output .= '<div class="panel-body">';
+    //         $output .= '<strong>' . $o->buyer . '</strong>';
+    //         $output .= '</div></div>';
+    //         $output .= '<div class="panel panel-default">';
+    //         $output .= '<div class="panel-heading">License Type</div>';
+    //         $output .= '<div class="panel-body">';
+    //         $output .= '<strong>' . $o->license . '</strong>';
+    //         $output .= '</div></div>';
+    //         $output .= '<div class="panel panel-success">';
+    //         $output .= '<div class="panel-heading">Supported Until</div>';
+    //         $output .= '<div class="panel-body">';
+    //         $output .= '<strong>' . date("d F Y", strtotime($o->supported_until)) . '</strong>';
+    //         $output .= '</div></div>';
 
-        $output_table = '<table class="table table-bordered">';
-        $output_table .= '<thead><tr><th>Title</th> <th>Value</th></tr> </thead>';
-        $output_table .= '<tbody>';
-        $output_table .= '<tr><td>Product Name</td><td>'. $o->item->name .'</td></tr>';
-        $output_table .= '<tr><td>Product ID</td><td>'. $o->item->id .'</td></tr>';
-        $output_table .= '<tr><td>Purchase Date</td><td>'. date( "d F Y", strtotime( $o->sold_at ) ) .'</td></tr>';
-        $output_table .= '<tr><td>Buyer Name</td><td>'. $o->buyer .'</td></tr>';
-        // $output_table .= '<tr><td>Buyer Name</td><td>'. $o->buyer_email .'</td></tr>';
-        $output_table .= '<tr><td>License Type</td><td>'. $o->license .'</td></tr>';
-        $output_table .= '<tr><td>Supported Until</td><td>'. date( "d F Y", strtotime( $o->supported_until ) ) .'</td></tr>';
-        $output_table .= '</tbody>';
-        $output_table .= '</table>';
-        switch ($result_type) {
-          case 'table':
-            return view('admin.verify', compact('output_table'));
-            break;
+    //         $output_table = '<table class="table table-bordered">';
+    //         $output_table .= '<thead><tr><th>Title</th> <th>Value</th></tr> </thead>';
+    //         $output_table .= '<tbody>';
+    //         $output_table .= '<tr><td>Product Name</td><td>' . $o->item->name . '</td></tr>';
+    //         $output_table .= '<tr><td>Product ID</td><td>' . $o->item->id . '</td></tr>';
+    //         $output_table .= '<tr><td>Purchase Date</td><td>' . date("d F Y", strtotime($o->sold_at)) . '</td></tr>';
+    //         $output_table .= '<tr><td>Buyer Name</td><td>' . $o->buyer . '</td></tr>';
+    //         // $output_table .= '<tr><td>Buyer Name</td><td>'. $o->buyer_email .'</td></tr>';
+    //         $output_table .= '<tr><td>License Type</td><td>' . $o->license . '</td></tr>';
+    //         $output_table .= '<tr><td>Supported Until</td><td>' . date("d F Y", strtotime($o->supported_until)) . '</td></tr>';
+    //         $output_table .= '</tbody>';
+    //         $output_table .= '</table>';
+    //         switch ($result_type) {
+    //             case 'table':
+    //                 return view('admin.verify', compact('output_table'));
+    //                 break;
 
-          case 'list':
-            return view('admin.verify', compact('output'));
-            break;
-          default:
-            echo $output_table;
-            return view('admin.verify', compact('output_table'));
-            break;
-        }
-      } else {
-        echo "<span style='color: red'>Sorry, This is not a valid purchase code or this user have not purchased any of your items.</div>";
-      }
-
-
-
-    }
+    //             case 'list':
+    //                 return view('admin.verify', compact('output'));
+    //                 break;
+    //             default:
+    //                 echo $output_table;
+    //                 return view('admin.verify', compact('output_table'));
+    //                 break;
+    //         }
+    //     } else {
+    //         echo "<span style='color: red'>Sorry, This is not a valid purchase code or this user have not purchased any of your items.</div>";
+    //     }
+    // }
 
 
-    public function purchaseCodeList(){
-       $purchaseCodes= PurchaseCode::all();
+    public function purchaseCodeList()
+    {
+        $purchaseCodes = PurchaseCode::all();
 
         return view('admin.purchase-code-list', compact('purchaseCodes'));
     }
 
-   public function purchaseCodeGenerate(){
-    $products= Product::all();
-     return view('admin.generate-code', compact('products'));
-   }
-
-   public function purchaseCodeStore(Request $request){
-
-    $validator = Validator::make($request->all(), [
-        'purchase_code' => 'required',
-        'marketplace_name' => 'required',
-        'product_name' => 'required',
-    ]);
-
-    if ($validator->fails()) {
-        return redirect()->back()->withErrors($validator)->withInput();
+    public function purchaseCodeGenerate()
+    {
+        $products = Product::all();
+        return view('admin.generate-code', compact('products'));
     }
-       PurchaseCode::create([
-           'purchase_code' => $request->purchase_code,
-           'marketplace_name' => $request->marketplace_name,
-           'product_name' => $request->product_name
-       ]);
 
-       toastr()->success('Data has been saved successfully!');
+    public function purchaseCodeStore(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'purchase_code' => 'required',
+            'marketplace_name' => 'required',
+            'product_name' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+        PurchaseCode::create([
+            'purchase_code' => $request->purchase_code,
+            'marketplace_name' => $request->marketplace_name,
+            'product_name' => $request->product_name
+        ]);
+
+        toastr()->success('Data has been saved successfully!');
         return redirect()->route('purchase.code.list');
-   }
+    }
 
-   public function purchaseCodeDelete($id){
+    public function purchaseCodeDelete($id)
+    {
         PurchaseCode::where('id', $id)->delete();
         toastr()->success('Data has been delete successfully!');
         return redirect()->back();
-
-   }
-
-
+    }
 }
