@@ -342,7 +342,7 @@ class AdminController extends Controller
 
     public function purchaseCodeList()
     {
-        $purchaseCodes = PurchaseCode::all();
+        $purchaseCodes = PurchaseCode::latest()->get();
 
         return view('admin.purchase-code-list', compact('purchaseCodes'));
     }
