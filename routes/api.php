@@ -26,4 +26,5 @@ Route::post('removed_license_key',[LicenseController::class, 'removedLicenseKey'
 Route::post('admin/verify-envato-purchase',[LicenseController::class, 'envatoPurchase']);
 Route::post('admin/license-update',[LicenseController::class, 'updateLicense']);
 Route::post('admin/license-remove',[LicenseController::class, 'removeLicense']);
+Route::post('admin/license-generate-key',[LicenseController::class, 'licenseGenerateKey']);
 

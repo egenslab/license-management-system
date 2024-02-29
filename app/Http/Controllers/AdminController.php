@@ -126,10 +126,11 @@ class AdminController extends Controller
     */
     public function licenseView($licenseId)
     {
-        $license = DB::table('licenses')
-            ->where('license_key', '<>', '', 'and')
-            ->get();
-        return view('admin.license_list', ['license' => $license]);
+        $license = License::find($licenseId);
+        $response=  json_decode($license->envato_response , true);
+        $ipDetails=  json_decode($license->ip_details , true);
+    //    dd($response);
+        return view('admin.license-detail', compact('license', 'response','ipDetails'));
     }
 
     /*

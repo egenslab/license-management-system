@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Admin;
 use App\Models\License;
+use App\Models\Product;
 use App\Classes\EnvatoApi2;
 use App\Models\PurchaseCode;
 use Illuminate\Http\Request;
@@ -364,4 +365,59 @@ class LicenseController extends Controller
         }
         return Response()->json(['status' => false, 'result' => "Wrong Purchase Code"]);
     }
+
+
+
+
+
+
+
+
+
+
+    public function licenseGenerateKey(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'marketplace_name' => 'required',
+            'product_name' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'errors' => $validator->errors()], 401);
+        }
+
+        if( $product= Product::where('name' , $request->product_name)->first()){
+             $purchaseCode= $this->purchaseCodeStore($product->name,$request);
+             return response()->json(['status' => true , 'license_key'=> $purchaseCode->purchase_code]);
+        }else{
+
+             $product=  Product::create(['name' => $request->product_name]);
+             $purchaseCode= $this->purchaseCodeStore($product->name,$request);
+             return response()->json(['status' => true , 'license_key'=> $purchaseCode->purchase_code]);
+        }
+    }
+
+
+
+    /**
+     * generateUUID
+     *
+     *
+     */
+    public function generateUUID()
+    {
+        return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x', mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0x0fff) | 0x4000, mt_rand(0, 0x3fff) | 0x8000, mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff));
+    }
+
+    protected function purchaseCodeStore($productName,$request){
+        $purchaseCode= PurchaseCode::create([
+            'product_name' => $productName,
+            'marketplace_name' => $request->marketplace_name,
+            'purchase_code' => $this->generateUUID(),
+         ]);
+
+         return  $purchaseCode;
+    }
+
+
 }
