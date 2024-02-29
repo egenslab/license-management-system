@@ -198,7 +198,7 @@
 
                                         <td>
                                             <a href="#" class="text-gray-600 text-hover-primary mb-1"
-                                                style="color:#3f4254; font-weight: 500;">{{ $liceseItem->script_type }}</a>
+                                                style="color:#3f4254; font-weight: 500;">{{ $liceseItem->script_name }}</a>
                                         </td>
                                         <td>
                                             @if ($liceseItem->status == 1)
