@@ -269,8 +269,8 @@ class LicenseController extends Controller
 
         $validator = Validator::make($request->all(), [
             'purchase_code' => 'required',
-            'marketplace_name' => 'required',
-            'script_type' => 'required',
+            // 'marketplace_name' => 'required',
+            'script_name' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -278,7 +278,7 @@ class LicenseController extends Controller
         }
 
 
-        $response = $this->envatoApi::verifyPurchase($request->purchase_code, $request->marketplace_name);
+        $response = $this->envatoApi::verifyPurchase($request->purchase_code, $request->script_name);
         if ($response == false) {
             return Response()->json(['status' => false, 'result' => 'Sorry, This is not a valid purchase code or this user have not purchased any of your items.']);
         } else {
@@ -287,17 +287,17 @@ class LicenseController extends Controller
                     return Response()->json(['status' => false, 'result' => "Already used the purchase code for " . $licenseExit->website_url . " domain. if you want to use another domain. please remove the purchase code from the use domain."]);
                 }
                 $license = new License;
-                $license->name = $response->buyer;
+                $license->name = isset($response->buyer) ? $response->buyer: "";
                 $license->email = $request->email;
-                $license->license_key = isset($request->purchase_code) ? $request->purchase_code :  $response->purchase_code;
+                $license->license_key = isset($response->purchase_code)? $response->purchase_code :$request->purchase_code ;
                 $license->website_url = $request->host_url;
                 $license->ip_details = json_encode(['query' => $request->ip()]);
-                $license->marketplace_name = $request->marketplace_name;
-                $license->script_type = $request->script_type;
+                $license->marketplace_name = isset($response->marketplace_name)? $response->marketplace_name : 'Envato';
+                $license->script_name = isset($response->script_name) ? $response->script_name : $request->script_name;
                 $license->status = 1;
                 $license->envato_response = json_encode($response);
                 $license->save();
-                $this->purchaseCodeDelete($request->purchase_code, $request->marketplace_name);
+                $this->purchaseCodeUpdate($request->purchase_code, $license->marketplace_name);
                 return Response()->json(['status' => true, 'result' => "Verify purchased code sucessfully"]);
             } catch (\Throwable $th) {
                 return Response()->json(['status' => false, 'result' => $th->getMessage()]);
@@ -305,18 +305,20 @@ class LicenseController extends Controller
         }
     }
 
-    public function purchaseCodeDelete($purchase_code, $marketplace_name)
+    public function purchaseCodeUpdate($purchase_code, $marketplace_name)
     {
 
         if (strtolower($marketplace_name) !== 'envato') {
-            PurchaseCode::where("purchase_code", $purchase_code)->first()->delete();
+            $purchaseCode= PurchaseCode::where("purchase_code", $purchase_code)->first();
+            $purchaseCode->used +=1;
+            $purchaseCode->update();
+
         }
     }
 
 
     public function updateLicense(Request $request)
     {
-
 
         $validator = Validator::make($request->all(), [
             'purchase_code' => 'required',
@@ -326,11 +328,11 @@ class LicenseController extends Controller
             return response()->json(['status' => false, 'errors' => $validator->errors()], 401);
         }
 
-        if ($licenseExit= License::where(['license_key' => $request->purchase_code, 'website_url' =>  $request->host_url])->first()) {
-            if ($licenseExit=License::where(['license_key' => $request->purchase_code, 'website_url' =>  $request->host_url])->first()) {
+        if ($licenseExit = License::where(['license_key' => $request->purchase_code, 'website_url' =>  $request->host_url])->first()) {
+            if ($licenseExit = License::where(['license_key' => $request->purchase_code, 'website_url' =>  $request->host_url])->first()) {
                 return Response()->json(['status' => true, 'result' => "Update Successfully",  'content' => '']);
             } else {
-                return Response()->json(['status' => false, 'result' => "Already use another domain". $licenseExit->website_url]);
+                return Response()->json(['status' => false, 'result' => "Already use another domain" . $licenseExit->website_url]);
             }
         }
         return Response()->json(['status' => false, 'result' => "Wrong Purchase Code"]);
@@ -350,14 +352,14 @@ class LicenseController extends Controller
             return response()->json(['status' => false, 'errors' => $validator->errors()], 401);
         }
 
-        if ($licenseExit=License::where(['license_key' => $request->purchase_code, 'website_url' =>  $request->host_url])->first()) {
-            if ($licenseExit=License::where(['license_key' => $request->purchase_code, 'website_url' =>  $request->host_url])->first()) {
-                 if($licenseExit){
+        if ($licenseExit = License::where(['license_key' => $request->purchase_code, 'website_url' =>  $request->host_url])->first()) {
+            if ($licenseExit = License::where(['license_key' => $request->purchase_code, 'website_url' =>  $request->host_url])->first()) {
+                if ($licenseExit) {
                     $licenseExit->delete();
                     return Response()->json(['status' => true, 'result' => "Puchase Code Remove Successfully"]);
-                 }
+                }
             } else {
-                return Response()->json(['status' => false, 'result' => "Already use another domain".$licenseExit->website_url]);
+                return Response()->json(['status' => false, 'result' => "Already use another domain" . $licenseExit->website_url]);
             }
         }
         return Response()->json(['status' => false, 'result' => "Wrong Purchase Code"]);

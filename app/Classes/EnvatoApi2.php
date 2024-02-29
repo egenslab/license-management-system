@@ -3,6 +3,7 @@
 namespace App\Classes;
 
 use App\Models\License;
+use App\Models\Product;
 use App\Models\PurchaseCode;
 
 class EnvatoApi2
@@ -56,21 +57,37 @@ class EnvatoApi2
 
 
 
-   public static function verifyPurchase($purchase_code, $marketplace_name=null)
+   public static function verifyPurchase($purchase_code, $productName)
     {
 
-        if(strtolower($marketplace_name)=='envato'){
+        if($product= PurchaseCode::where(['purchase_code'=>$purchase_code, 'product_name' =>$productName ])->first()){
+             return $product;
+        }else{
             $verify_obj = self::getPurchaseData($purchase_code);
             if ((false === $verify_obj) || !is_object($verify_obj) || isset($verify_obj->error) || !isset($verify_obj->sold_at))
                 return  false;
 
             if ($verify_obj->supported_until == "" || $verify_obj->supported_until != null)
                 return $verify_obj;
-
-        }else{
-
-           return self::marketplacePurchaseCode($purchase_code);
         }
+
+
+
+
+
+
+        // if(strtolower($marketplace_name)=='envato'){
+        //     $verify_obj = self::getPurchaseData($purchase_code);
+        //     if ((false === $verify_obj) || !is_object($verify_obj) || isset($verify_obj->error) || !isset($verify_obj->sold_at))
+        //         return  false;
+
+        //     if ($verify_obj->supported_until == "" || $verify_obj->supported_until != null)
+        //         return $verify_obj;
+
+        // }else{
+
+        //    return self::marketplacePurchaseCode($purchase_code);
+        // }
 
     }
 

@@ -44,29 +44,15 @@ class ProductController extends Controller
     {
         //
     $validator = Validator::make($request->all(), [
-        'name' => 'required',
+        'name' => 'required|unique:products,name',
     ]);
 
     if ($validator->fails()) {
         return redirect()->back()->withErrors($validator)->withInput();
     }
 
-
-
-    Product::create([
-         'name'=>$request->name
-    ]);
-
-
+    Product::create([ 'name'=>$request->name]);
     return redirect()->route('product.index');
-
-
-
-
-
-
-
-
 
     }
 

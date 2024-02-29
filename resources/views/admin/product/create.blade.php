@@ -20,12 +20,10 @@
                     <div class="card-body ">
                         <form action="{{ route('product.store') }}" method="POST">
                             @csrf
-
-
                             <div class="form-group row">
                                 <label class="col-sm-3"> <b>Product Name</b></label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="name"  class="form-control"  />
+                                    <input type="text" name="name"  class="form-control" placeholder="Enter Your Project Name" />
 
                                         @error('name')
                                         <div class="error text-danger">{{ $message }}</div>
