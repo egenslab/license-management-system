@@ -12,7 +12,7 @@
         <div id="kt_content_container" class="container-xxl">
             <div class="card">
                 <div class="card-body pt-5">
-                    <a href="{{ route('generate.purchase.code') }}" class="btn btn-sm btn-primary"  id="kt_toolbar_primary_button"> New Create </a>
+                    <a href="{{ route('generate.purchase.code') }}" class="btn btn-sm btn-primary"  id="kt_toolbar_primary_button"> New License Key Generate </a>
                     <!--begin::Table-->
                     <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_customers_table">
                         <!--begin::Table head-->

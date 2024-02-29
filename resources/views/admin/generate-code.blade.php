@@ -19,7 +19,7 @@
     <div class="toolbar" id="kt_toolbar">
         <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
             <div data-kt-swapper="true">
-                <h1 class="d-flex align-items-center text-dark fw-bolder fs-3 my-1">Product Add </h1>
+                <h1 class="d-flex align-items-center text-dark fw-bolder fs-3 my-1">Generate License Key </h1>
             </div>
         </div>
     </div>
